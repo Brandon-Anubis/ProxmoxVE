@@ -19,7 +19,7 @@ var_ip="${var_ip:-}"           # blank -> DHCP
 var_install="${var_install:-supabase-install.sh}"   # <─ NEW
 
 # ----------------------  import helpers  ----------------------------------
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
 
 header_info "$APP"
 variables; color; catch_errors
