@@ -5,7 +5,7 @@
 
 APP="Supabase"
 
-# --------------------  defaults  ------------------------------------------
+# ----------------------  defaults  ----------------------------------------
 var_tags="${var_tags:-docker}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-8192}"     # MiB
@@ -16,48 +16,47 @@ var_unprivileged="${var_unprivileged:-1}"
 var_hostname="${var_hostname:-supabase}"
 var_bridge="${var_bridge:-vmbr0}"
 var_ip="${var_ip:-}"           # blank -> DHCP
-# var_ctid left empty = auto-next-free by build.func
+var_install="${var_install:-supabase-install.sh}"   # <─ NEW
 
-# --------------------  import framework helpers ---------------------------
+# ----------------------  import helpers  ----------------------------------
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
 header_info "$APP"
 variables; color; catch_errors
 
-# --------------------  advanced wizard ------------------------------------
+# ----------------------  wizard  ------------------------------------------
 function advanced_settings() {
-  header_info "$APP -- Advanced Setup"
+  header_info "$APP — Advanced Setup"
   echo -e "${YW}Press Enter to accept the [default] shown in brackets.${CL}\n"
 
   read -r -p "Container ID     [next free] : " input
-  if [[ -n "$input" ]]; then var_ctid="$input"; fi
+  if [[ -n "$input" ]];    then var_ctid="$input"; fi
 
   read -r -p "Hostname         [${var_hostname}] : " input
-  if [[ -n "$input" ]]; then var_hostname="$input"; fi
+  if [[ -n "$input" ]];    then var_hostname="$input"; fi
 
   read -r -p "Bridge           [${var_bridge}] : "  input
-  if [[ -n "$input" ]]; then var_bridge="$input"; fi
+  if [[ -n "$input" ]];    then var_bridge="$input"; fi
 
   read -r -p "Static IP/CIDR   [DHCP] : "          input
-  if [[ -n "$input" ]]; then var_ip="$input"; fi
+  if [[ -n "$input" ]];    then var_ip="$input"; fi
 
   read -r -p "CPU cores        [${var_cpu}] : "     input
-  if [[ -n "$input" ]]; then var_cpu="$input"; fi
+  if [[ -n "$input" ]];    then var_cpu="$input"; fi
 
   read -r -p "RAM MiB          [${var_ram}] : "     input
-  if [[ -n "$input" ]]; then var_ram="$input"; fi
+  if [[ -n "$input" ]];    then var_ram="$input"; fi
 
   read -r -p "Disk GB          [${var_disk}] : "    input
-  if [[ -n "$input" ]]; then var_disk="$input"; fi
+  if [[ -n "$input" ]];    then var_disk="$input"; fi
 
   read -r -p "Privileged CT?   (y/N) : "            input
   if [[ "${input,,}" == "y" ]]; then var_unprivileged=0; fi
 
   read -r -p "Custom tag list  [${var_tags}] : "    input
-  if [[ -n "$input" ]]; then var_tags="$input"; fi
+  if [[ -n "$input" ]];    then var_tags="$input"; fi
 }
 
-# interactive prompt only if running in a tty
 if [[ -t 0 && ! "${ADVANCED,,}" == "y" ]]; then
   read -n1 -rp $'\nPress (a)dvanced setup  or  (Enter) to continue with defaults: ' key
   echo
@@ -65,7 +64,7 @@ if [[ -t 0 && ! "${ADVANCED,,}" == "y" ]]; then
 fi
 [[ "${ADVANCED,,}" == "y" ]] && advanced_settings
 
-# --------------------  update routine -------------------------------------
+# ----------------------  update-only path  --------------------------------
 function update_script() {
   header_info
   check_container_storage
@@ -86,8 +85,11 @@ function update_script() {
   exit
 }
 
-# --------------------  hand off to builder  -------------------------------
-start build_container description
+# ----------------------  build sequence  ----------------------------------
+start
+build_container
+description
+
 msg_ok "Supabase LXC created successfully!"
 echo -e "${TAB}${INFO}${YW}Tip:${CL} reverse-proxy via your NPM-Plus CT:"
 echo -e "${TAB}${TAB}➜  api.example.tld  →  http://<CT-IP>:8000"
