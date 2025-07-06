@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -euo pipefail
 
 # Copyright (c) 2021-2025 tteck
 # Author: Brandon Anubis
@@ -7,11 +6,7 @@ set -euo pipefail
 # Source: https://supabase.com/
 
 # --- Function Sourcing ---
-if [[ -n "${FUNCTIONS_FILE_PATH:-}" ]]; then
-    source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
-else
-    source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
-fi
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 
 color
 verb_ip6
@@ -37,10 +32,11 @@ $STD apt-get install -y docker-ce docker-ce-cli containerd.io \
                        docker-buildx-plugin docker-compose-plugin
 msg_ok "Installed Docker"
 
-msg_info "Fetching Supabase compose (June 2025 tag)"
+SUPABASE_TAG="2025.06"
+msg_info "Fetching Supabase compose ($SUPABASE_TAG tag)"
 mkdir -p /opt/supabase/volumes/{db,storage,pooler,functions,logs}
 curl -fsSL \
-  https://raw.githubusercontent.com/supabase/supabase/2025.06/docker/docker-compose.yml \
+  https://raw.githubusercontent.com/supabase/supabase/${SUPABASE_TAG}/docker/docker-compose.yml \
   -o /opt/supabase/docker-compose.yml
 msg_ok "Fetched compose"
 
@@ -75,27 +71,6 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-# --- Update Logic ---
-update_script() {
-    header_info "Supabase Update"
-    if [[ ! -d /opt/supabase ]]; then
-        msg_error "No Supabase installation found!"
-        exit 1
-    fi
-    msg_info "Pulling latest Supabase images"
-    if ! docker compose -p supabase -f /opt/supabase/docker-compose.yml --env-file /opt/supabase/.env pull; then
-        msg_error "Failed to pull images"
-        exit 1
-    fi
-    msg_info "Re-creating containers"
-    if ! docker compose -p supabase -f /opt/supabase/docker-compose.yml --env-file /opt/supabase/.env up -d; then
-        msg_error "Failed to re-create containers"
-        exit 1
-    fi
-    msg_ok "Updated Supabase stack"
-    exit 0
-}
 
 # --- Final Output ---
 IP=$(hostname -I | awk '{print $1}')
