@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Copyright (c) 2021-2025 tteck
 # Author: Brandon Anubis
@@ -11,14 +12,6 @@ if [[ -n "${FUNCTIONS_FILE_PATH:-}" ]]; then
 else
     source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
 fi
-
-# --- Dependency Check ---
-for cmd in curl docker; do
-    if ! command -v "$cmd" &>/dev/null; then
-        echo "[ERROR] '$cmd' is required but not installed. Aborting."
-        exit 1
-    fi
-done
 
 color
 verb_ip6
