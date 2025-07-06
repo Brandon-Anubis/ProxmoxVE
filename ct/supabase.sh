@@ -27,26 +27,45 @@ color
 catch_errors
 
 # ---------- optional ADVANCED wizard --------------------------------------
-function advanced_settings() {
+advanced_settings() {
   header_info "$APP — Advanced Setup"
   echo -e "${YW}Press Enter to accept the [default] shown in brackets.${CL}\n"
 
-  read -r -p "Container ID     [next free] : " input && [[ -n "$input" ]] && var_ctid="$input"
-  read -r -p "Hostname         [${var_hostname}] : " input && [[ -n "$input" ]] && var_hostname="$input"
-  read -r -p "Bridge           [${var_bridge}] : "  input && [[ -n "$input" ]] && var_bridge="$input"
-  read -r -p "Static IP/CIDR   [DHCP] : "          input && [[ -n "$input" ]] && var_ip="$input"
-  read -r -p "CPU cores        [${var_cpu}] : "     input && [[ -n "$input" ]] && var_cpu="$input"
-  read -r -p "RAM MiB          [${var_ram}] : "     input && [[ -n "$input" ]] && var_ram="$input"
-  read -r -p "Disk GB          [${var_disk}] : "    input && [[ -n "$input" ]] && var_disk="$input"
+  read -r -p "Container ID     [next free] : " input
+  if [[ -n "$input" ]]; then var_ctid="$input"; fi
+
+  read -r -p "Hostname         [${var_hostname}] : " input
+  if [[ -n "$input" ]]; then var_hostname="$input"; fi
+
+  read -r -p "Bridge           [${var_bridge}] : " input
+  if [[ -n "$input" ]]; then var_bridge="$input"; fi
+
+  read -r -p "Static IP/CIDR   [DHCP] : " input
+  if [[ -n "$input" ]]; then var_ip="$input"; fi
+
+  read -r -p "CPU cores        [${var_cpu}] : " input
+  if [[ -n "$input" ]]; then var_cpu="$input"; fi
+
+  read -r -p "RAM MiB          [${var_ram}] : " input
+  if [[ -n "$input" ]]; then var_ram="$input"; fi
+
+  read -r -p "Disk GB          [${var_disk}] : " input
+  if [[ -n "$input" ]]; then var_disk="$input"; fi
+
   echo -e "${YW}Privileged containers have less isolation and are not recommended unless needed.${CL}"
-  read -r -p "Privileged CT?   (y/N) : "            input && [[ "${input,,}" == "y" ]] && var_unprivileged=0
-  read -r -p "Custom tag list  [${var_tags}] : "    input && [[ -n "$input" ]] && var_tags="$input"
+  read -r -p "Privileged CT?   (y/N) : " input
+  if [[ "${input,,}" == "y" ]]; then var_unprivileged=0; fi
+
+  read -r -p "Custom tag list  [${var_tags}] : " input
+  if [[ -n "$input" ]]; then var_tags="$input"; fi
 }
 
 if [[ -t 0 ]]; then
   read -n1 -rp $'\nPress (a)dvanced setup or (Enter) to continue with defaults: ' key
   echo
-  [[ "${key,,}" == "a" ]] && advanced_settings
+  if [[ "${key,,}" == "a" ]]; then
+    advanced_settings
+  fi
 fi
 
 variables
