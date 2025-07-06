@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
-# Runs *inside* the new LXC
-source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"  # re-import helpers
+# Copyright (c) 2021-2025 tteck
+# Author: Brandon Anubis
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://supabase.com/
 
-color; verb_ip6; catch_errors
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+color
+verb_ip6
+catch_errors
 setting_up_container
 network_check
 update_os
 
-# ---- Docker Engine & Compose v2 ------------------------------------------
-msg_info "Installing Docker Engine"
-apt-get update -qq
-apt-get install -y curl gnupg ca-certificates lsb-release
+msg_info "Installing Dependencies"
+$STD apt-get install -y curl gnupg ca-certificates lsb-release
+msg_ok "Installed Dependencies"
+
+msg_info "Installing Docker Engine & Compose"
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/$(. /etc/os-release && echo $ID)/gpg \
   | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -18,20 +24,19 @@ echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
   https://download.docker.com/linux/$(. /etc/os-release && echo $ID) \
   $(lsb_release -cs) stable" >/etc/apt/sources.list.d/docker.list
-apt-get update -qq
-apt-get install -y docker-ce docker-ce-cli containerd.io \
-                   docker-buildx-plugin docker-compose-plugin
-msg_ok "Docker installed"
+$STD apt-get update
+$STD apt-get install -y docker-ce docker-ce-cli containerd.io \
+                       docker-buildx-plugin docker-compose-plugin
+msg_ok "Installed Docker"
 
-# ---- Supabase stack -------------------------------------------------------
 msg_info "Fetching Supabase compose (June 2025 tag)"
 mkdir -p /opt/supabase/volumes/{db,storage,pooler,functions,logs}
 curl -fsSL \
   https://raw.githubusercontent.com/supabase/supabase/2025.06/docker/docker-compose.yml \
   -o /opt/supabase/docker-compose.yml
+msg_ok "Fetched compose"
 
-# ---- .env with randomised secrets ----------------------------------------
-msg_info "Creating .env"
+msg_info "Creating environment file"
 cat >/opt/supabase/.env <<EOF
 POSTGRES_PASSWORD=$(openssl rand -hex 16)
 JWT_SECRET=$(openssl rand -hex 32)
@@ -47,15 +52,18 @@ KONG_HTTPS_PORT=8443
 POSTGRES_PORT=5432
 POOLER_PROXY_PORT_TRANSACTION=6543
 EOF
-msg_ok ".env ready"
+msg_ok "Created .env"
 
-# ---- bring everything online ---------------------------------------------
-msg_info "Launching Supabase stack (grab a ☕)"
+msg_info "Launching Supabase stack (grab a coffee)"
 docker compose -p supabase \
   -f /opt/supabase/docker-compose.yml \
   --env-file /opt/supabase/.env up -d
-msg_ok "Supabase is live"
+msg_ok "Supabase stack is live"
 
 motd_ssh
 customize
-cleanup
+
+msg_info "Cleaning up"
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
+msg_ok "Cleaned"
