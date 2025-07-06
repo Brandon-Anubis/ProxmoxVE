@@ -1,24 +1,28 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
-# Author: Brandon Anubis (based on tteck template)
+# Author: Brandon Anubis
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://supabase.com/
 
 APP="Supabase"
+
+# ----------------------  defaults  ----------------------------------------
 var_tags="${var_tags:-docker}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-8192}"
 var_disk="${var_disk:-30}"
-var_os="${var_os:-debian}"     # ← stable template always present
+var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
 var_hostname="${var_hostname:-supabase}"
 var_bridge="${var_bridge:-vmbr0}"
-var_ip="${var_ip:-}"           # DHCP by default
+var_ip="${var_ip:-}"
 var_install="${var_install:-supabase-install.sh}"
 
+# ----------------------  framework bootstrap (correct order!) -------------
 header_info "$APP"
+variables            # ← this was missing; sets RANDOM_UUID, prints defaults
 color
 catch_errors
 
