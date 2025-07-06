@@ -15,14 +15,6 @@ fi
 
 APP="Supabase"
 
-# --- Dependency Check ---
-for cmd in curl docker; do
-    if ! command -v "$cmd" &>/dev/null; then
-        echo "[ERROR] '$cmd' is required but not installed. Aborting."
-        exit 1
-    fi
-done
-
 # ----------------------  defaults  ----------------------------------------
 var_tags="${var_tags:-docker}"
 var_cpu="${var_cpu:-4}"
