@@ -22,7 +22,7 @@ var_install="${var_install:-supabase-install.sh}"   # <─ NEW
 template_test="ubuntu-${var_version}-standard_${var_version}-2_amd64.tar.zst"
 if ! pveam available | grep -q "$template_test"; then
   var_template="ubuntu-${var_version}-standard_${var_version}-1_amd64.tar.zst"
-f
+fi
 
 # ----------------------  import helpers  ----------------------------------
 source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
