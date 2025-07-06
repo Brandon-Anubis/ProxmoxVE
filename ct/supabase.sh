@@ -18,6 +18,12 @@ var_bridge="${var_bridge:-vmbr0}"
 var_ip="${var_ip:-}"           # blank -> DHCP
 var_install="${var_install:-supabase-install.sh}"   # <─ NEW
 
+# -------- ensure a valid template revision exists -------------------------
+template_test="ubuntu-${var_version}-standard_${var_version}-2_amd64.tar.zst"
+if ! pveam available | grep -q "$template_test"; then
+  var_template="ubuntu-${var_version}-standard_${var_version}-1_amd64.tar.zst"
+f
+
 # ----------------------  import helpers  ----------------------------------
 source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
 
