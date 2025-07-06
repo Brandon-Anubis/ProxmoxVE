@@ -1,10 +1,25 @@
 #!/usr/bin/env bash
+
 # Copyright (c) 2021-2025 tteck
 # Author: Brandon Anubis
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://supabase.com/
 
-source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+# --- Function Sourcing ---
+if [[ -n "${FUNCTIONS_FILE_PATH:-}" ]]; then
+    source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+else
+    source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
+fi
+
+# --- Dependency Check ---
+for cmd in curl docker; do
+    if ! command -v "$cmd" &>/dev/null; then
+        echo "[ERROR] '$cmd' is required but not installed. Aborting."
+        exit 1
+    fi
+done
+
 color
 verb_ip6
 catch_errors
@@ -67,3 +82,29 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+
+# --- Update Logic ---
+update_script() {
+    header_info "Supabase Update"
+    if [[ ! -d /opt/supabase ]]; then
+        msg_error "No Supabase installation found!"
+        exit 1
+    fi
+    msg_info "Pulling latest Supabase images"
+    if ! docker compose -p supabase -f /opt/supabase/docker-compose.yml --env-file /opt/supabase/.env pull; then
+        msg_error "Failed to pull images"
+        exit 1
+    fi
+    msg_info "Re-creating containers"
+    if ! docker compose -p supabase -f /opt/supabase/docker-compose.yml --env-file /opt/supabase/.env up -d; then
+        msg_error "Failed to re-create containers"
+        exit 1
+    fi
+    msg_ok "Updated Supabase stack"
+    exit 0
+}
+
+# --- Final Output ---
+IP=$(hostname -I | awk '{print $1}')
+echo -e "${INFO}${YW} Supabase stack is running. Access it via:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP:-localhost}:8000${CL}"
