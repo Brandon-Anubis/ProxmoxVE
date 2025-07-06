@@ -1,101 +1,78 @@
 #!/usr/bin/env bash
-# Supabase – Helper-Script (host side) for Proxmox VE
-# Maintainer: Brandon Anubis
-# License: MIT
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2025 tteck
+# Author: Brandon Anubis (based on tteck template)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://supabase.com/
 
 APP="Supabase"
-
-# ----------------------  defaults  ----------------------------------------
 var_tags="${var_tags:-docker}"
 var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-8192}"     # MiB
-var_disk="${var_disk:-30}"     # GB
-var_os="${var_os:-ubuntu}"
-var_version="${var_version:-24.04}"
+var_ram="${var_ram:-8192}"
+var_disk="${var_disk:-30}"
+var_os="${var_os:-debian}"     # ← stable template always present
+var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
 var_hostname="${var_hostname:-supabase}"
 var_bridge="${var_bridge:-vmbr0}"
-var_ip="${var_ip:-}"           # blank -> DHCP
-var_install="${var_install:-supabase-install.sh}"   # <─ NEW
-
-# -------- ensure a valid template revision exists -------------------------
-template_test="ubuntu-${var_version}-standard_${var_version}-2_amd64.tar.zst"
-if ! pveam available | grep -q "$template_test"; then
-  var_template="ubuntu-${var_version}-standard_${var_version}-1_amd64.tar.zst"
-fi
-
-# ----------------------  import helpers  ----------------------------------
-source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
+var_ip="${var_ip:-}"           # DHCP by default
+var_install="${var_install:-supabase-install.sh}"
 
 header_info "$APP"
-variables; color; catch_errors
+color
+catch_errors
 
-# ----------------------  wizard  ------------------------------------------
+# ---------- optional ADVANCED wizard --------------------------------------
 function advanced_settings() {
   header_info "$APP — Advanced Setup"
   echo -e "${YW}Press Enter to accept the [default] shown in brackets.${CL}\n"
 
-  read -r -p "Container ID     [next free] : " input
-  if [[ -n "$input" ]];    then var_ctid="$input"; fi
-
-  read -r -p "Hostname         [${var_hostname}] : " input
-  if [[ -n "$input" ]];    then var_hostname="$input"; fi
-
-  read -r -p "Bridge           [${var_bridge}] : "  input
-  if [[ -n "$input" ]];    then var_bridge="$input"; fi
-
-  read -r -p "Static IP/CIDR   [DHCP] : "          input
-  if [[ -n "$input" ]];    then var_ip="$input"; fi
-
-  read -r -p "CPU cores        [${var_cpu}] : "     input
-  if [[ -n "$input" ]];    then var_cpu="$input"; fi
-
-  read -r -p "RAM MiB          [${var_ram}] : "     input
-  if [[ -n "$input" ]];    then var_ram="$input"; fi
-
-  read -r -p "Disk GB          [${var_disk}] : "    input
-  if [[ -n "$input" ]];    then var_disk="$input"; fi
-
-  read -r -p "Privileged CT?   (y/N) : "            input
-  if [[ "${input,,}" == "y" ]]; then var_unprivileged=0; fi
-
-  read -r -p "Custom tag list  [${var_tags}] : "    input
-  if [[ -n "$input" ]];    then var_tags="$input"; fi
+  read -r -p "Container ID     [next free] : " input && [[ -n $input ]] && var_ctid="$input"
+  read -r -p "Hostname         [${var_hostname}] : " input && [[ -n $input ]] && var_hostname="$input"
+  read -r -p "Bridge           [${var_bridge}] : "  input && [[ -n $input ]] && var_bridge="$input"
+  read -r -p "Static IP/CIDR   [DHCP] : "          input && [[ -n $input ]] && var_ip="$input"
+  read -r -p "CPU cores        [${var_cpu}] : "     input && [[ -n $input ]] && var_cpu="$input"
+  read -r -p "RAM MiB          [${var_ram}] : "     input && [[ -n $input ]] && var_ram="$input"
+  read -r -p "Disk GB          [${var_disk}] : "    input && [[ -n $input ]] && var_disk="$input"
+  read -r -p "Privileged CT?   (y/N) : "            input && [[ ${input,,} == y ]] && var_unprivileged=0
+  read -r -p "Custom tag list  [${var_tags}] : "    input && [[ -n $input ]] && var_tags="$input"
 }
 
-if [[ -t 0 && ! "${ADVANCED,,}" == "y" ]]; then
+if [[ -t 0 ]]; then
   read -n1 -rp $'\nPress (a)dvanced setup  or  (Enter) to continue with defaults: ' key
   echo
-  [[ ${key,,} == "a" ]] && ADVANCED=y
+  [[ ${key,,} == a ]] && advanced_settings
 fi
-[[ "${ADVANCED,,}" == "y" ]] && advanced_settings
 
-# ----------------------  update-only path  --------------------------------
+variables                              # ← prints the final values to the user
+
+# --------------------- update-only hook -----------------------------------
 function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  [[ -d /opt/supabase ]] || { msg_error "No Supabase installation found!"; exit 1; }
-
-  msg_info "Pulling latest Supabase images"
-  docker compose -p supabase \
-    -f /opt/supabase/docker-compose.yml \
-    --env-file /opt/supabase/.env pull
-
-  msg_info "Recreating containers"
-  docker compose -p supabase \
-    -f /opt/supabase/docker-compose.yml \
-    --env-file /opt/supabase/.env up -d
-
-  msg_ok "Supabase stack updated"
+  if [[ ! -d /opt/supabase ]]; then
+    msg_error "No ${APP} installation found!"
+    exit
+  fi
+  msg_info "Pulling latest ${APP} images"
+  docker compose -p supabase                                \
+       -f /opt/supabase/docker-compose.yml                  \
+       --env-file /opt/supabase/.env pull
+  msg_info "Re-creating containers"
+  docker compose -p supabase                                \
+       -f /opt/supabase/docker-compose.yml                  \
+       --env-file /opt/supabase/.env up -d
+  msg_ok "Updated ${APP} LXC"
   exit
 }
 
-# ----------------------  build sequence  ----------------------------------
+# --------------------- build sequence (must be three lines) ---------------
 start
 build_container
 description
 
-msg_ok "Supabase LXC created successfully!"
-echo -e "${TAB}${INFO}${YW}Tip:${CL} reverse-proxy via your NPM-Plus CT:"
-echo -e "${TAB}${TAB}➜  api.example.tld  →  http://<CT-IP>:8000"
+msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Access it via:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://<CT-IP>:8000${CL}"
