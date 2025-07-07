@@ -4,7 +4,7 @@
 if [[ -n "${FUNCTIONS_FILE_PATH:-}" ]]; then
     source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 else
-    source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+    source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
 fi
 
 # Copyright (c) 2021-2025 tteck
