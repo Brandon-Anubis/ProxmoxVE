@@ -36,7 +36,7 @@ SUPABASE_TAG="2025.06"
 msg_info "Fetching Supabase compose ($SUPABASE_TAG tag)"
 mkdir -p /opt/supabase/volumes/{db,storage,pooler,functions,logs}
 curl -fsSL \
-  https://raw.githubusercontent.com/supabase/supabase/${SUPABASE_TAG}/docker/docker-compose.yml \
+  https://raw.githubusercontent.com/supabase/supabase/refs/heads/master/docker/docker-compose.yml \
   -o /opt/supabase/docker-compose.yml
 msg_ok "Fetched compose"
 
