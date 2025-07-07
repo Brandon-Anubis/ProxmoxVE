@@ -2,7 +2,7 @@
 source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 communtiy-scripts ORG
 # Author: MickLesk (Canbiz)
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Brandon-Anubis/ProxmoxVE/raw/main/LICENSE
 # Source: https://wordpress.org/
 
 ## App Default Values

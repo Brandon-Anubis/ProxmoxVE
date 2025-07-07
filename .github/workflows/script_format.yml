@@ -63,7 +63,7 @@ jobs:
                  fi
 
               EXPECTED_AUTHOR="# Author:"
-              EXPECTED_LICENSE="# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE"
+              EXPECTED_LICENSE="# License: MIT | https://github.com/Brandon-Anubis/ProxmoxVE/raw/main/LICENSE"
               EXPECTED_SOURCE="# Source:"
               EXPECTED_EMPTY=""
 
@@ -161,7 +161,7 @@ jobs:
               fi
 
               EXPECTED_AUTHOR="# Author:"
-              EXPECTED_LICENSE="# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE"
+              EXPECTED_LICENSE="# License: MIT | https://github.com/Brandon-Anubis/ProxmoxVE/raw/main/LICENSE"
               EXPECTED_SOURCE="# Source:"
               EXPECTED_EMPTY=""
 

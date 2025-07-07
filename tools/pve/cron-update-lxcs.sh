@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# https://github.com/Brandon-Anubis/ProxmoxVE/raw/main/LICENSE
 # bash -c "$(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/tools/pve/cron-update-lxcs.sh)"
 
 clear

@@ -2,7 +2,7 @@
 source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/refs/heads/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: elvito
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Brandon-Anubis/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/PCJones/UmlautAdaptarr
 
 APP="UmlautAdaptarr"

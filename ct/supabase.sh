@@ -9,7 +9,7 @@ fi
 
 # Copyright (c) 2021-2025 tteck
 # Author: Brandon Anubis
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Brandon-Anubis/ProxmoxVE/raw/main/LICENSE
 # Source: https://supabase.com/
 
 APP="Supabase"

@@ -40,27 +40,27 @@ Before contributing, please ensure that you have the following setup:
    - [Shell Format](https://marketplace.visualstudio.com/items?itemName=foxundermoon.shell-format)
 
 ### Important Notes
-- Use [AppName.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.sh) and [AppName-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.sh) as templates when creating new scripts. Final version of the script (the one you will push for review), must have all comments removed, except the ones in the file header.
+- Use [AppName.sh](https://github.com/Brandon-Anubis/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.sh) and [AppName-install.sh](https://github.com/Brandon-Anubis/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.sh) as templates when creating new scripts. Final version of the script (the one you will push for review), must have all comments removed, except the ones in the file header.
 
 ---
 
 # 🚀 The Application Script (ct/AppName.sh)
 
-- You can find all coding standards, as well as the structure for this file [here](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.md).
+- You can find all coding standards, as well as the structure for this file [here](https://github.com/Brandon-Anubis/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.md).
 - These scripts are responsible for container creation, setting the necessary variables and handling the update of the application once installed.
 
 ---
 
 # 🛠 The Installation Script (install/AppName-install.sh)
 
-- You can find all coding standards, as well as the structure for this file [here](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.md).
+- You can find all coding standards, as well as the structure for this file [here](https://github.com/Brandon-Anubis/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.md).
 - These scripts are responsible for the installation of the application.
 
 ---
 
 ## 🚀 Building Your Own Scripts
 
-Start with the [template script](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.sh)
+Start with the [template script](https://github.com/Brandon-Anubis/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.sh)
 
 ---
 
@@ -122,8 +122,8 @@ Open a Pull Request from your feature branch to the main branch on the Dev repos
 
 ## 📚 Pages
 
-- [CT Template: AppName.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.sh)
-- [Install Template: AppName-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.sh)
-- [JSON Template: AppName.json](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/json/AppName.json)
+- [CT Template: AppName.sh](https://github.com/Brandon-Anubis/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.sh)
+- [Install Template: AppName-install.sh](https://github.com/Brandon-Anubis/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.sh)
+- [JSON Template: AppName.json](https://github.com/Brandon-Anubis/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/json/AppName.json)
 
 

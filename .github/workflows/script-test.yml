@@ -102,7 +102,7 @@ jobs:
                   continue
                 fi
             fi
-            git remote add community-scripts https://github.com/community-scripts/ProxmoxVE.git
+            git remote add community-scripts https://github.com/Brandon-Anubis/ProxmoxVE.git
             git fetch community-scripts
             rm -f .github/workflows/scripts/app-test/pr-build.func || true
             rm -f .github/workflows/scripts/app-test/pr-install.func || true

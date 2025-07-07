@@ -2,7 +2,7 @@
 source <(curl -fsSL https://raw.githubusercontent.com/Brandon-Anubis/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tlissak | Co-Author MickLesk
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Brandon-Anubis/ProxmoxVE/raw/main/LICENSE
 # Source: https://typesense.org/
 
 APP="TypeSense"
